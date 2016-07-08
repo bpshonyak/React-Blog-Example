@@ -16,7 +16,10 @@ class PostNew extends Component {
         <div className='form-group'>
           <label>Title</label>
           <input type='text' className='form-control' {...title} />
-        </div>
+          <div className='text-help'>
+            { title.touched ? title.error : '' }
+          </div>
+      </div>
 
         <div className='form-group'>
           <label>Categories</label>
@@ -35,8 +38,20 @@ class PostNew extends Component {
   }
 }
 
+// handle form validation
+function validate(values) {
+    const errors = {};
+
+    if (!values.title) {
+      errors.title = 'Enter a Title for your post.';
+    }
+
+    return errors;
+}
+
 // reduxForm is used in place of connect and has one additional arg... the form config obj
 export default reduxForm({
   form: 'PostNew',
-  fields: ['title', 'categories', 'content']
+  fields: ['title', 'categories', 'content'],
+  validate
 }, null, { createPost } )(PostNew);
