@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 
+import { createPost } from '../actions/index';
+
 class PostNew extends Component {
 
   render() {
@@ -8,7 +10,7 @@ class PostNew extends Component {
     const { fields: { title, categories, content }, handleSubmit } = this.props;
 
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(this.props.createPost)}>
         <h3>Create A New Post</h3>
 
         <div className='form-group'>
@@ -33,7 +35,8 @@ class PostNew extends Component {
   }
 }
 
+// reduxForm is used in place of connect and has one additional arg... the form config obj
 export default reduxForm({
   form: 'PostNew',
   fields: ['title', 'categories', 'content']
-})(PostNew);
+}, null, { createPost } )(PostNew);
