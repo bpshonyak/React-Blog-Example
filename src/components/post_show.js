@@ -1,12 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { fetchPost } from '../actions/index';
+import { fetchPost, deletePost } from '../actions/index';
+import { Link } from 'react-router';
 
 class PostShow extends Component {
+
+  // Defines contextTypes on the PostNew proptype
+  static contextTypes = {
+    router: PropTypes.object
+  }
 
   // React lifecycle method (only called once on the first render)
   componentWillMount() {
     this.props.fetchPost(this.props.params.id);
+  }
+
+  onDeleteClick() {
+    this.props.deletePost(this.props.params.id).then( () => {
+      this.context.router.push('/');
+    });
   }
 
   render() {
@@ -19,6 +31,12 @@ class PostShow extends Component {
     } else {
       return (
         <div>
+          <Link to='/' className='btn btn-primary'>Back</Link>
+          <button
+            className='btn btn-danger pull-xs-right'
+            onClick={this.onDeleteClick.bind(this)}>
+            Delete Post
+          </button>
           <h3> { post.title } </h3>
           <h6> Categories: { post.categories } </h6>
           <p> { post.content } </p>
@@ -32,4 +50,4 @@ function mapStateToProps(state) {
   return { post: state.posts.post };
 }
 
-export default connect(mapStateToProps, { fetchPost })(PostShow);
+export default connect(mapStateToProps, { fetchPost, deletePost })(PostShow);
